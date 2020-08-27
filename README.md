@@ -1,4 +1,4 @@
-# Terraform-Training
+https://www.terraform.io/docs/backends/types/azurerm.html# Terraform-Training
 
 <!-- toc -->
 
@@ -593,7 +593,7 @@ While this holds some certainly concern, Terraform is - according to [this artic
 
 <br>
 
-Review the following conent:
+Review the following content:
 - [HashiCorps understanding of semver.org](https://github.com/hashicorp/terraform/issues/15839#issuecomment-323106524)
 - [Major version zero (0.y.z) is for initial development](https://semver.org/#spec-item-4)
 - [Version 1.0.0 defines the public API](https://semver.org/#spec-item-5)
@@ -694,7 +694,7 @@ output "windows_vm_public_name" {
 
 <br>
 
-Review the following conent:
+Review the following content:
 - [Terraform - Modules Registry](https://registry.terraform.io/modules/Azure/compute/azurerm/3.5.0)
 
 <br>
@@ -721,7 +721,7 @@ Add `depends_on          = [module.resGroup]` into each module block.
 
 <br>
 
-Review the following conent:
+Review the following content:
 - [depends_on](https://www.terraform.io/docs/configuration/resources.html#depends_on-explicit-resource-dependencies)
 
 <br>
@@ -732,7 +732,7 @@ A few functions are added as comments into the code, let'S explorer them.
 
 <br>
 
-Review the following conent:
+Review the following content:
 - [Terraform - Functions](https://www.terraform.io/docs/configuration/functions.html)
 
 <br><br><br>
@@ -781,7 +781,7 @@ module "users" {
 
 <br>
 
-Review the following conent:
+Review the following content:
 - [For and For-Each](https://www.hashicorp.com/blog/hashicorp-terraform-0-12-preview-for-and-for-each/)
 - [Dynamic Block](https://www.terraform.io/docs/configuration/expressions.html#dynamic-blocks)
 - [For-Each in Modules](https://www.hashicorp.com/blog/terraform-0-13-brings-powerful-meta-arguments-to-modular-workflows/)
@@ -791,11 +791,11 @@ Review the following conent:
 <br><br><br>
 
 ---
-### Exercise 05 &nbsp; -- &nbsp; Workspace Usage; Local and Remote State
+### Exercise 05 &nbsp; -- &nbsp; Workspace Usage; Local and Remote Backend
 
 Let's look into `exercise_05` for a setup v0.11 version of a terraform configuration.
 
-**1) &emsp; Local Workspace**
+**1) &emsp; Workspace (Local Backend)**
 
 Execute the following commands - ONE BY ONE:
 ```bash
@@ -827,20 +827,68 @@ terraform destroy -auto-approve
 
 <br>
 
-Review the following conent:
+Review the following content:
+- [Local Backend](https://www.terraform.io/docs/backends/types/local.html)
+- [AzureRM Backend](https://www.terraform.io/docs/backends/types/azurerm.html)
 - [Workspace - Local Terraform](https://www.terraform.io/docs/state/workspaces.html)
 - [When to use Workspace](https://www.terraform.io/docs/state/workspaces.html#when-to-use-multiple-workspaces)
 
-Named workspaces allow conveniently switching between multiple instances of a single configuration within its single backend. They are convenient in a number of situations, but cannot solve all problems.
 
-[...]
+>Named workspaces allow conveniently switching between multiple instances of a single configuration within its single backend. They are convenient in a number of situations, but cannot solve all problems.
+>
+>[...]
+>
+>In particular, organizations commonly want to create a strong separation between multiple deployments of the same infrastructure serving different development stages (e.g. staging vs. production) or different internal teams. In this case, the backend used for each deployment often belongs to that deployment, with different credentials and access controls. Named workspaces are not a suitable isolation mechanism for this scenario. ( *Source: [When to use Workspace](https://www.terraform.io/docs/state/workspaces.html#when-to-use-multiple-workspaces)* )
 
-In particular, organizations commonly want to create a strong separation between multiple deployments of the same infrastructure serving different development stages (e.g. staging vs. production) or different internal teams. In this case, the backend used for each deployment often belongs to that deployment, with different credentials and access controls. Named workspaces are not a suitable isolation mechanism for this scenario.
+<br>
+
+**2) &emsp; Cloud Workspace (Remote Backend)**
+
+Besides using a local Backend we are able to utilize a remote backend as well:
+```hcl
+# Using a single workspace:
+terraform {
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "company"
+
+    workspaces {
+      name = "my-app-prod"
+    }
+  }
+}
+
+# Using multiple workspaces (use workspace new like for local backend):
+terraform {
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "company"
+
+    workspaces {
+      prefix = "my-app-"
+    }
+  }
+}
+
+# Using the -backend-config parameter and a tfvars-file (suitable for multiple and single workspace)
+terraform {
+    backend "remote" {}
+}
+```
+
+To use the remote backend we have to setup an account on https://app.terraform.io/.
 
 
 
+<br>
+
+Review the following content:
+- [Workspace - Cloud Terraform](https://www.terraform.io/docs/cloud/workspaces/index.html#workspace-contents)
+- [Remote Backend](https://www.terraform.io/docs/backends/types/remote.html)
 
 <br><br><br>
+
+
 
 ---
 

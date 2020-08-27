@@ -1,4 +1,7 @@
 terraform {
+  backend "local" {
+    path = "tfstate/terraform.tfstate"
+  }
   required_version = "~> 0.13.0"
   required_providers {
     azurerm = {
