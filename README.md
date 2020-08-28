@@ -1,4 +1,4 @@
-https://www.terraform.io/docs/backends/types/azurerm.html# Terraform-Training
+# Terraform-Training
 
 <!-- toc -->
 
@@ -13,7 +13,7 @@ https://www.terraform.io/docs/backends/types/azurerm.html# Terraform-Training
     - [Exercise 02 &nbsp; -- &nbsp; Version-Upgrade](#exercise-02------version-upgrade)
     - [Exercise 03 &nbsp; -- &nbsp; Modules and Functions](#exercise-03------modules-and-functions)
     - [Exercise 04 &nbsp; -- &nbsp; For_Each, Count, Dynamic blocks, Generalized Splat Operator](#exercise-04------for_each-count-dynamic-blocks-generalized-splat-operator)
-    - [Exercise 05 &nbsp; -- &nbsp; Workspace Usage; Local and Remote State](https://github.com/DenWin/Terraform-Training/blob/master/README.md#exercise-05------workspace-usage-local-and-remote-state)
+    - [Exercise 05 &nbsp; -- &nbsp; Workspace Usage; Local and Remote Backend](#exercise-05------workspace-usage-local-and-remote-backend)
 - [APPENDIX](#appendix)
   - [Create a Service Principal](#create-a-service-principal)
     - [How to create a Service Principal](#how-to-create-a-service-principal)
@@ -304,7 +304,7 @@ provider "azurerm" {
 }
 ```
 
-Let's add a data source to verify we are actually able to connecct to Azure:
+Let's add a data source to verify we are actually able to connect to Azure:
 ```hcl
 data "azurerm_client_config" "current" { }
 
@@ -374,7 +374,7 @@ Let's continue with just `terraform apply` for now.
 
 This command will ignore plan created with the prior plan, hence the WARNING. It will rather create a new one and request you to approve on the changes on the fly.
 
-So, say no, and execute the following instead, using the priviously exported plan:
+So, say no, and execute the following instead, using the previously exported plan:
 
 ```bash
 terraform apply terraform.tfplan
@@ -383,10 +383,10 @@ terraform apply terraform.tfplan
 If you do not care about any previously created plan, you could have also executed it like this:
 
 ```bash
-terraform apply --auto-apporve
+terraform apply --auto-approve
 ```
 
-This way you could have skipped `terraform plan` alltogether. Is it wise? Well ...
+This way you could have skipped `terraform plan` altogether. Is it wise? Well ...
 
 <br>
 
@@ -442,7 +442,7 @@ variable "client_id"        { }
 variable "client_secret"    { }
 ```
 
-Remove the `seperate_file.tf` and overwrite the content of the `main.tf` file with this one:
+Remove the `separate_file.tf` and overwrite the content of the `main.tf` file with this one:
 ```hcl
 terraform {
   required_version = "~> 0.13.0"
@@ -469,9 +469,9 @@ data "azurerm_client_config" "current" { } # the data block is only required to 
 
 ```
 
-Just for giggles run `terraform plan` at this point. It will ask for the varaibles to be entered manaully.
+Just for giggles run `terraform plan` at this point. It will ask for the variables to be entered manually.
 
-This would of course be a valible way to execute the project, but I would actually prefer the variables to be added automatically.
+This would of course be a valid method to execute the project, but I would actually prefer the variables to be added automatically.
 
 <br>
 
@@ -565,7 +565,7 @@ Review the following content:
 ### Exercise 02 &nbsp; -- &nbsp; Version-Upgrade
 
 Terraform is still relatively young. Version 0.1 came out on 28th July 2014 and in 2017 v0.11 was released.
-But the biggest change happend in May 2019, when v0.12 was released.
+But the biggest change happened in May 2019, when v0.12 was released.
 
 Let's look into `exercise_02` for a setup v0.11 version of a terraform configuration.
 
@@ -603,13 +603,21 @@ Review the following content:
 ---
 ### Exercise 03 &nbsp; -- &nbsp; Modules and Functions
 
-**1) &emsp; Prep terraform.tfvars**
+**1) &emsp; Prep terraform.tfvars and variables.tf as before**
 ```hcl
 tenant_id        = "00000000-0000-0000-0000-000000000000"    # Use your own tenant_id, ...
 subscription_id  = "00000000-0000-0000-0000-000000000000"    # ... subscription_id, ...
 
 client_id        = "00000000-0000-0000-0000-000000000000"    # ... client_id and ...
 client_secret    = "client_secret"                           # ... client_secret.
+```
+
+```hcl
+variable tenant_id           {}
+variable subscription_id     {}
+variable client_id           {}
+variable client_secret       {}
+
 ```
 
 **2) &emsp; Prep main.tf**
@@ -648,6 +656,7 @@ module "linuxservers" {
   source              = "Azure/compute/azurerm"
   version             = "3.5.0"
   resource_group_name = azurerm_resource_group.example.name
+//  depends_on          = [azurerm_resource_group.example]
   vm_os_simple        = "UbuntuServer"
   public_ip_dns       = ["linsimplevmips"]
   vnet_subnet_id      = module.network.vnet_subnets[0]
@@ -657,13 +666,14 @@ module "windowsservers" {
   source              = "Azure/compute/azurerm"
   version             = "3.5.0"
   resource_group_name = azurerm_resource_group.example.name
+//  depends_on          = [azurerm_resource_group.example]
   is_windows_image    = true
-  vm_hostname         = "mywinvm"
-//  vm_hostname         = chomp("mywinvm\r\n\n\n")
+//  vm_hostname         = "mywinvm"
+  vm_hostname         = chomp("mywinvm\r\n\n\n")
   admin_password      = "ComplxP@ssw0rd!"
   vm_os_simple        = "WindowsServer"
-  public_ip_dns       = ["winsimplevmips"]
-//  public_ip_dns       = [strrev("winsimplevmips")]
+//  public_ip_dns       = ["winsimplevmips"]
+  public_ip_dns       = [strrev("winsimplevmips")]
   vnet_subnet_id      = module.network.vnet_subnets[0]
 }
 
@@ -671,11 +681,12 @@ module "network" {
   source              = "Azure/network/azurerm"
   version             = "3.1.1"
   resource_group_name = azurerm_resource_group.example.name
+//  depends_on          = [azurerm_resource_group.example]
   address_space       = "10.0.0.0/16"
-  subnet_prefixes     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-//  subnet_prefixes     = [cidrsubnet("10.0.0.0/16", 8, 1), cidrsubnet("10.0.0.0/16", 8, 2), cidrsubnet("10.0.0.0/16", 8, 3)]
-  subnet_names        = ["subnet1", "subnet2", "subnet3"]
-//  subnet_names        = split(",", "subnet1,subnet2,subnet3")
+//  subnet_prefixes     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  subnet_prefixes     = [cidrsubnet("10.0.0.0/16", 8, 1), cidrsubnet("10.0.0.0/16", 8, 2), cidrsubnet("10.0.0.0/16", 8, 3)]
+//  subnet_names        = ["subnet1", "subnet2", "subnet3"]
+  subnet_names        = split(",", "subnet1,subnet2,subnet3")
 
   tags = {
     environment = "dev"
@@ -696,6 +707,7 @@ output "windows_vm_public_name" {
 
 Review the following content:
 - [Terraform - Modules Registry](https://registry.terraform.io/modules/Azure/compute/azurerm/3.5.0)
+- [depends_on](https://www.terraform.io/docs/configuration/resources.html#depends_on-explicit-resource-dependencies)
 
 <br>
 
@@ -708,25 +720,14 @@ resource "azurerm_resource_group" "example" {
   location = "West Europe"
 }
 ```
-- Add an output forthe resGroup name
+- Add an output for the resGroup name
 - Add the input variables for the module
 - replace the resource azurerm_resource_group from the root module by the module
 - correct the reference to the module
 
 <br>
 
-**4) &emsp; add depends_on**
-
-Add `depends_on          = [module.resGroup]` into each module block.
-
-<br>
-
-Review the following content:
-- [depends_on](https://www.terraform.io/docs/configuration/resources.html#depends_on-explicit-resource-dependencies)
-
-<br>
-
-**5) &emsp; Let's mess a little with functions**
+**4) &emsp; Let's mess a little with functions**
 
 A few functions are added as comments into the code, let'S explorer them.
 
@@ -750,7 +751,7 @@ resource "azurerm_virtual_hub" "example" {
   ...
 ```
 
-**2) &emsp; Dynamic Block & for_each in ressource block**
+**2) &emsp; Dynamic Block & for_each in resource block**
 ```hcl
 dynamic "route" {
   for_each = local.routes
@@ -793,7 +794,7 @@ Review the following content:
 ---
 ### Exercise 05 &nbsp; -- &nbsp; Workspace Usage; Local and Remote Backend
 
-Let's look into `exercise_05` for a setup v0.11 version of a terraform configuration.
+Let's look into `exercise_05`.
 
 **1) &emsp; Workspace (Local Backend)**
 
@@ -814,7 +815,7 @@ terraform workspace new foo
 terraform plan -out terraform.tfplan
 terraform apply     terraform.tfplan
 
-terraform plan -out terraform.tfplan -destory
+terraform plan -out terraform.tfplan -destroy
 terraform apply     terraform.tfplan
 
 terraform workspace select bar
@@ -888,6 +889,42 @@ Review the following content:
 
 <br><br><br>
 
+### Exercise 06 &nbsp; -- &nbsp; Manipulate the State of Terraform
+
+Let's look into `exercise_06`.
+
+**1) &emsp; Prepare**
+Run the configuration as it and check a ressource group `ABC` does exist in Azure.
+Also look into our terraform.tfstate file and find the entry for the resource group ABC and note the resource ID.
+
+**2) &emsp; Remove this resource from our tfstate file**
+To remove a resource, we have to address the HCL-Id of the ressource and that you wanna remove it:
+```bash
+terraform state rm azurerm_resource_group.AB
+```
+
+**3) &emsp; Import a resssource into the tfstate file**
+For this step to work, we acnnot rely on git-bash and cygwin, but we rather need to open a powershell command.
+In ther enter this:
+```bash
+ terraform import azurerm_resource_group.ABC "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ABC"
+ #(Where "00000000-0000-0000-0000-000000000000" has to be replace by ones own subscription GUID.)
+``
+<br>
+
+Review the following content:
+- [Terraform State](https://www.terraform.io/docs/state/index.html#inspection-and-modification)
+
+<br>
+
+### Exercise 07 &nbsp; -- &nbsp; Provisioner
+
+<br>
+
+Review the following content:
+- [Terraform Provisioner](https://www.terraform.io/docs/provisioners/index.html)
+
+<br><br><br>
 
 
 ---
