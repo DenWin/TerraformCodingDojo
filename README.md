@@ -14,6 +14,8 @@
     - [Exercise 03 &nbsp; -- &nbsp; Modules and Functions](#exercise-03------modules-and-functions)
     - [Exercise 04 &nbsp; -- &nbsp; For_Each, Count, Dynamic blocks, Generalized Splat Operator](#exercise-04------for_each-count-dynamic-blocks-generalized-splat-operator)
     - [Exercise 05 &nbsp; -- &nbsp; Workspace Usage; Local and Remote Backend](#exercise-05------workspace-usage-local-and-remote-backend)
+    - [Exercise 06 &nbsp; -- &nbsp; Manipulate the State of Terraform](#exercise-06------manipulate-the-state-of-terraform)
+    - [Exercise 07 &nbsp; -- &nbsp; Provisioner](#exercise-07------provisioner)
 - [APPENDIX](#appendix)
   - [Create a Service Principal](#create-a-service-principal)
     - [How to create a Service Principal](#how-to-create-a-service-principal)
@@ -894,18 +896,18 @@ Review the following content:
 Let's look into `exercise_06`.
 
 **1) &emsp; Prepare**
-Run the configuration as it and check a ressource group `ABC` does exist in Azure.
+Run the configuration as it and check a resource group `ABC` does exist in Azure.
 Also look into our terraform.tfstate file and find the entry for the resource group ABC and note the resource ID.
 
 **2) &emsp; Remove this resource from our tfstate file**
-To remove a resource, we have to address the HCL-Id of the ressource and that you wanna remove it:
+To remove a resource, we have to address the HCL-Id of the resource and that you wanna remove it:
 ```bash
 terraform state rm azurerm_resource_group.AB
 ```
 
-**3) &emsp; Import a resssource into the tfstate file**
-For this step to work, we acnnot rely on git-bash and cygwin, but we rather need to open a powershell command.
-In ther enter this:
+**3) &emsp; Import a resource into the tfstate file**
+For this step to work, we cannot rely on git-bash and cygwin, but we rather need to open a powershell command.
+In there enter this:
 ```bash
  terraform import azurerm_resource_group.ABC "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ABC"
  #(Where "00000000-0000-0000-0000-000000000000" has to be replace by ones own subscription GUID.)
