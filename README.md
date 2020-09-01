@@ -33,7 +33,7 @@
 ---
 ## Prerequisites
 
-- An active Azure subscription (with administrator privileges and a [Service Principal](#create-service-principal) you have access to)
+- An active Azure subscription (with administrator privileges and a [Service Principal](#create-a-service-principal) you have access to)
 - [Visual Studio Code](https://code.visualstudio.com/download), plus:
   - [Terraform extension](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform) (the current version 2.2.0 breaks the syntax, revert back to 2.1.1)
   - [Terraform snippets extension](https://marketplace.visualstudio.com/items?itemName=mindginative.terraform-snippets) (even though outdated, still nice to have)
@@ -156,7 +156,7 @@ All exercises are based on Azure.
 
 Well basically this was part of the preparation, but let's rush through it to have a common start.
 
-In the APPENDIX you will find the description to [setup a Service Principal](#create-service-principal) using the Portal.
+In the APPENDIX you will find the description to [setup a Service Principal](#create-a-service-principal) using the Portal.
 
 Let's use a different approach to fetch the facts, we require for our training via the Cloud Shell:
 > ![Open_Cloudshell](Images/Open_Cloudshell.png)<br>
@@ -171,7 +171,7 @@ az account list --query "[].{name:name,subscriptionID:id,tenantID:tenantId,IsEna
 
 **... as well as the ClientIDs.**
 
-If you haven't done so yet, please create one right [now](#create-service-principal).
+If you haven't done so yet, please create one right [now](#create-a-service-principal).
 ```bash
 az ad sp list --query "[?contains(tags,'WindowsAzureActiveDirectoryIntegratedApp')].{displayName:displayName,clientID:appId}" --all --out table
 ```
