@@ -124,33 +124,30 @@ All exercises are based on Azure.
   - Collect Subscription ID & Tenant ID
   - Fetch Service Principal data
 - Exercise 00:
-  - tf-file
-  - Connecting to Azure
-  - terraform commands (init, plan, apply, destroy)
+  - Terraform File-Structure
+  - Basic Terraform configuration for Azure
+  - Basic Terraform commands
 - Exercise 01:
-  - Variable – Handling (Env-Variable, Variable, Parameter, Local-Variables)
+  - Variables
+  – Env-Variable
+  - Local variables
+  - Validation
 - Exercise 02:
-  - Version-Upgrade 0.11 -> 0.12 & Is Terraform still “Under Development?”
+  - Version-Upgrade 0.11 -> 0.12
+  - Is Terraform still “Under Development?”
 - Exercise 03:
   - Functions
   - Modules
 - Exercise 04:
-  - Resources & Dependencies
+  - Dynamic Blocks
+  - For, For-Each
 - Exercise 05:
   - Workspaces
+  - Local vs Remote Backend
 - Exercise 06:
-  - Local vs Remote State
+  - State-File-Manipulation
 - Exercise 07:
-  - Manipulating the state-file
-- Exercise 08:
   - Provisioner
-- Exercise 09:
-  - Terraform Commands – Advanced
-- Exercise 10:
-  - Integration into Azure DevOps or another CI/CD pipeline
-
-- Other stuff
-  - Using the Snippet Extension
 
 <br><br><br>
 
@@ -911,7 +908,8 @@ In there enter this:
 ```bash
  terraform import azurerm_resource_group.ABC "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ABC"
  #(Where "00000000-0000-0000-0000-000000000000" has to be replace by ones own subscription GUID.)
-``
+```
+
 <br>
 
 Review the following content:
