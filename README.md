@@ -596,6 +596,7 @@ Review the following content:
 - [HashiCorps understanding of semver.org](https://github.com/hashicorp/terraform/issues/15839#issuecomment-323106524)
 - [Major version zero (0.y.z) is for initial development](https://semver.org/#spec-item-4)
 - [Version 1.0.0 defines the public API](https://semver.org/#spec-item-5)
+- [The Path to Terraform 1.0](https://www.hashicorp.com/resources/the-path-to-terraform-1-0)
 
 <br>
 
